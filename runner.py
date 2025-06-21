@@ -164,14 +164,9 @@ def list_tasks():
         print("'tasks' directory not found.")
 
 def report_results():
-    """Finds all results.json files and reports the scores."""
+    """Finds all results.json files and reports the scores in a markdown table."""
     tasks_dir = "tasks"
-    total_score = 0
-    results_found = 0
-
-    print("\n" + "="*80)
-    print("BENCHMARK RESULTS")
-    print("="*80)
+    all_results = []
 
     for task_name in sorted(os.listdir(tasks_dir)):
         task_dir = os.path.join(tasks_dir, task_name)
@@ -181,22 +176,42 @@ def report_results():
                 try:
                     with open(results_path, 'r') as f:
                         data = json.load(f)
-                        score = data.get("final_score_objective", 0)
-                        total_score += score
-                        results_found += 1
-                        print(f"- {task_name + ':':<25} {score:.2f} / 80")
-                except json.JSONDecodeError:
-                    print(f"- {task_name + ':':<25} ERROR: Could not parse results.json")
-                except Exception as e:
-                    print(f"- {task_name + ':':<25} ERROR: {e}")
+                        all_results.append(data)
+                except (json.JSONDecodeError, KeyError):
+                    print(f"Warning: Could not parse results.json for '{task_name}'")
 
-    if results_found > 0:
-        print("-" * 80)
-        print(f"TOTAL SCORE: {total_score:.2f} / {results_found * 80:.2f}")
-    else:
+    if not all_results:
         print("No results found. Run a task with 'evaluate' to generate results.")
-    
-    print("="*80 + "\n")
+        return
+
+    # Sort results by task name for consistent output
+    all_results.sort(key=lambda x: x.get("task_name", ""))
+
+    # Print header
+    print(f"| {'Task':<22} | {'Correct. (/60)':<15} | {'Complete (/20)':<15} | {'Score (/80)':<12} | {'Time (s)':<10} |")
+    print(f"| {'-'*22} | {'-'*15} | {'-'*15} | {'-'*12} | {'-'*10} |")
+
+    total_correctness = 0
+    total_completion = 0
+    total_score = 0
+    total_time = 0
+
+    for data in all_results:
+        task_name = f"`{data.get('task_name', 'N/A')}`"
+        correctness = data.get('scores', {}).get('correctness', 0)
+        completion = data.get('scores', {}).get('task_completion', 0)
+        score = data.get("final_score_objective", 0)
+        time = data.get('execution_time_seconds', 0)
+
+        total_correctness += correctness
+        total_completion += completion
+        total_score += score
+        total_time += time
+
+        print(f"| {task_name:<22} | {correctness:<15.2f} | {completion:<15.2f} | {score:<12.2f} | {time:<10.2f} |")
+
+    # Print total
+    print(f"| **{'Total':<22}** | **{total_correctness:<15.2f}** | **{total_completion:<15.2f}** | **{total_score:<12.2f}** | **{total_time:<10.2f}** |")
 
 def main():
     """Main function to run and score benchmark tasks."""
