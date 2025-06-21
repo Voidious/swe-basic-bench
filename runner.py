@@ -191,9 +191,15 @@ def report_results():
     # Sort results by task name for consistent output
     all_results.sort(key=lambda x: x.get("task_name", ""))
 
-    # Print header
-    print(f"| {'Task':<22} | {'Correct. (/60)':<15} | {'Complete (/20)':<15} | {'Score (/80)':<12} | {'Time (s)':<10} |")
-    print(f"| {'-'*22} | {'-'*15} | {'-'*15} | {'-'*12} | {'-'*10} |")
+    output_lines = [
+        "\n# Benchmark Results Summary\n",
+        "The table below shows the results for all completed tasks.",
+        "For more details on scoring, please see the README.md file.\n"
+    ]
+
+    # Table header
+    output_lines.append(f"| {'Task':<24} | {'Correct. (/60)':<15} | {'Complete (/20)':<15} | {'Score (/80)':<12} | {'Time (s)':<10} |")
+    output_lines.append(f"| {'-'*24} | {'-'*15} | {'-'*15} | {'-'*12} | {'-'*10} |")
 
     total_correctness = 0
     total_completion = 0
@@ -212,10 +218,13 @@ def report_results():
         total_score += score
         total_time += time
 
-        print(f"| {task_name:<22} | {correctness:<15.2f} | {completion:<15.2f} | {score:<12.2f} | {time:<10.2f} |")
+        output_lines.append(f"| {task_name:<24} | {correctness:<15.2f} | {completion:<15.2f} | {score:<12.2f} | {time:<10.2f} |")
 
-    # Print total
-    print(f"| **{'Total':<22}** | **{total_correctness:<15.2f}** | **{total_completion:<15.2f}** | **{total_score:<12.2f}** | **{total_time:<10.2f}** |")
+    # Total row
+    total_label = f"Total"
+    output_lines.append(f"| {total_label:<24} | {total_correctness:<15.2f} | {total_completion:<15.2f} | {total_score:<12.2f} | {total_time:<10.2f} |")
+    
+    print('\n'.join(output_lines))
 
     if os.path.exists(CONFIRMATION_FILE):
         os.remove(CONFIRMATION_FILE)

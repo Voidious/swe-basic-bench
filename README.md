@@ -91,7 +91,7 @@ After running one or more evaluations, the agent can see a summary of all result
 python runner.py report
 ```
 
-This will display the scores for all completed tasks and a final total score.
+This will display the scores for all completed tasks and a final total score in a markdown table.
 
 This structured approach allows an agent to systematically work through the benchmark, from understanding the task to seeing the final result.
 
@@ -99,7 +99,7 @@ This structured approach allows an agent to systematically work through the benc
 
 After running the benchmark, the coding agent should report the results to the user. The report should be clear, concise, and provide a summary of the agent's performance.
 
-The agent should present the final results in a markdown table format. The table should include the following metrics for each task:
+The `report` command, as described above, will generate this table automatically. The agent should present the final results in a markdown table format. The table should include the following metrics for each task:
 - Task Name
 - Correctness Score
 - Task Completion Score
