@@ -219,9 +219,9 @@ def main():
     """Main function to run and score benchmark tasks."""
     parser = argparse.ArgumentParser(
         description="Run and score benchmark tasks for a coding agent.",
-        epilog="Please read the README.md for full instructions. You must run this script with '--confirm-readme' once before you can use other commands."
+        epilog="Please read the README.md for full instructions. You must run this script with '--confirm-i-have-viewed-entire-readme' once before you can use other commands."
     )
-    parser.add_argument("--confirm-readme", action="store_true", help="Confirm you have read the README.md.")
+    parser.add_argument("--confirm-i-have-viewed-entire-readme", action="store_true", help="Confirm you have read the README.md.")
     subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # 'list' command
@@ -240,19 +240,19 @@ def main():
 
     args = parser.parse_args()
 
-    # If --confirm-readme is used, create the file.
-    if args.confirm_readme:
+    # If --confirm-i-have-viewed-entire-readme is used, create the file.
+    if args.confirm_i_have_viewed_entire_readme:
         with open(CONFIRMATION_FILE, "w") as f:
             f.write(datetime.datetime.now(datetime.timezone.utc).isoformat())
         print("README confirmation recorded. You can now use other commands.")
-        # If ONLY --confirm-readme was passed, exit.
+        # If ONLY --confirm-i-have-viewed-entire-readme was passed, exit.
         if not args.command:
             sys.exit(0)
 
     # For any command, require confirmation.
     if args.command and not os.path.exists(CONFIRMATION_FILE):
-        print("Error: You must run --confirm-readme once before using other commands.")
-        print("Example: python runner.py --confirm-readme")
+        print("Error: You must run --confirm-i-have-viewed-entire-readme once before using other commands.")
+        print("Example: python runner.py --confirm-i-have-viewed-entire-readme")
         sys.exit(1)
 
     # What if no command is given?
@@ -260,7 +260,7 @@ def main():
         if not os.path.exists(CONFIRMATION_FILE):
             print("Welcome! To get started, please read the README.md file.")
             print("Then, run this command to confirm you have read it:")
-            print("    python runner.py --confirm-readme")
+            print("    python runner.py --confirm-i-have-viewed-entire-readme")
         else:
             # Already confirmed, show help.
             parser.print_help()
