@@ -182,4 +182,6 @@ cython_debug/
 .cursorindexingignore
 
 # Benchmark problem solutions
-**/solution/
+tasks/**/results.json
+tasks/**/solution/
+tasks/**/.start_time

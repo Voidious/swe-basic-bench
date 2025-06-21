@@ -9,9 +9,7 @@ The goal of this benchmark is to provide a standardized set of coding tasks that
 Performance can be measured across several axes:
 - **Task Completion:** Did the agent successfully complete the task?
 - **Correctness:** Does the generated code pass all verification checks?
-- **Efficiency:** How many steps, tool calls, or interactions were required?
-- **Execution Time:** How long did it take for the agent to complete the task (lower is better)?
-- **Code Quality:** Is the generated code clean, maintainable, and well-documented?
+- **Execution Time:** How long did it take for the agent to complete the task?
 
 ## Structure
 
@@ -40,16 +38,89 @@ swe-basic-bench/
 
 ## How to Run a Task
 
-1.  **Select a Task:** Choose a task from the `tasks/` directory.
-2.  **Prepare the Environment:**
-    -   Copy the contents of the task's `initial_code/` directory (if it exists) into the `solution/` directory.
-    -   The `solution/` directory is the working directory for the agent.
-3.  **Instruct the Agent:**
-    -   Open the `solution/` directory in your AI-powered editor (e.g., Cursor).
-    -   Provide the agent with the content of the corresponding `prompt.md`.
-4.  **Verify the Solution:**
-    -   Once the agent has completed the task, run the verification script(s) from the `verifier/` directory against the code in `solution/`.
-    -   The specifics of running the verifier will be detailed in each task's `prompt.md`.
+The official method for running benchmark tasks is to use the `runner.py` script. This ensures that the process is standardized and that results are captured in a uniform way.
+
+The workflow is designed for a coding agent and is broken into four distinct steps:
+
+1.  **List available tasks**: See what tasks are available to run.
+2.  **Start a task**: Prepare the workspace and get the prompt.
+3.  **Evaluate the solution**: Run the verifier and get the score.
+4.  **Report all results**: See a summary of all results.
+
+### 1. List Available Tasks
+To see all the tasks in the benchmark, run:
+```bash
+python runner.py list
+```
+
+### 2. Start a Task
+When the agent is ready to begin a task, it should run the `start` command. This will prepare the `solution/` directory and display the prompt.
+
+```bash
+python runner.py start <task-name>
+```
+For example:
+```bash
+python runner.py start simple-calculator
+```
+
+After running this command, the agent should:
+1.  Read the displayed prompt.
+2.  Generate the solution code and save it to the `tasks/<task-name>/solution/` directory.
+
+### 3. Evaluate the Solution
+Once the agent has created the solution, it should run the `evaluate` command. This will:
+1.  Run the verifier tests (`pytest`).
+2.  Calculate the final scores.
+3.  Generate the `results.json` file.
+
+```bash
+python runner.py evaluate <task-name>
+```
+For example:
+```bash
+python runner.py evaluate simple-calculator
+```
+
+### 4. Report All Results
+After running one or more evaluations, the agent can see a summary of all results by running the `report` command.
+
+```bash
+python runner.py report
+```
+
+This will display the scores for all completed tasks and a final total score.
+
+This structured approach allows an agent to systematically work through the benchmark, from understanding the task to seeing the final result.
+
+## Scoring
+
+Each task attempt is scored out of 80 points, based on the following objective criteria.
+
+-   **Correctness (60 points):** Points are awarded based on the percentage of passing tests in the `verifier/` script.
+    -   `Score = 60 * (Number of Passing Tests / Total Number of Tests)`
+-   **Task Completion (20 points):**
+    -   **20 points:** The agent produced all the required files and outputs in the correct locations.
+    -   **0 points:** The agent failed to produce the required output.
+
+**Execution Time** is automatically calculated by the `runner.py` script and recorded in the `results.json` file. It is not scored directly but serves as a key performance indicator.
+
+### Results Format
+
+The `runner.py` script generates a `results.json` file with the following structure.
+
+```json
+{
+    "task_name": "task-name-goes-here",
+    "timestamp": "2023-10-27T10:00:00Z",
+    "scores": {
+        "correctness": 60,
+        "task_completion": 20
+    },
+    "final_score_objective": 80,
+    "pytest_output": "..."
+}
+```
 
 ## How to Add a New Task
 
