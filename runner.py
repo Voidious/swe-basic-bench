@@ -1,3 +1,5 @@
+# IMPORTANT: DO NOT MODIFY THIS FILE.
+# This file is used to run the benchmark tasks and should not be altered.
 # Before running this script, please read the README.md file for instructions and explanations.
 import argparse
 import datetime

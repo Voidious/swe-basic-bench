@@ -25,7 +25,7 @@ swe-basic-bench/
 │   │   └── verifier/
 │   │       └── ... (verification scripts, e.g., pytest tests)
 │   └── ...
-├── runner.py                (optional, for future automation)
+├── runner.py                (do not modify)
 └── README.md
 ```
 
@@ -39,6 +39,8 @@ swe-basic-bench/
 ## How to Run a Task
 
 The official method for running benchmark tasks is to use the `runner.py` script. This ensures that the process is standardized and that results are captured in a uniform way.
+
+**Important:** Do not modify the `runner.py` script. The benchmark is designed to be run with the provided runner to ensure standardized evaluation.
 
 The workflow is designed for a coding agent and is broken into four distinct steps:
 
