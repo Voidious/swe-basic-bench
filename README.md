@@ -93,6 +93,29 @@ This will display the scores for all completed tasks and a final total score.
 
 This structured approach allows an agent to systematically work through the benchmark, from understanding the task to seeing the final result.
 
+### How to Report Results
+
+After running the benchmark, the coding agent should report the results to the user. The report should be clear, concise, and provide a summary of the agent's performance.
+
+The agent should present the final results in a markdown table format. The table should include the following metrics for each task:
+- Task Name
+- Correctness Score
+- Task Completion Score
+- Final Score
+- Execution Time (in seconds)
+
+The agent can gather this information from the `results.json` file generated for each task.
+
+Here is an example of the expected output format:
+
+| Task                   | Correct. (/60) | Complete (/20) | Score (/80) | Time (s) |
+| ---------------------- | -------------- | -------------- | ----------- | -------- |
+| `simple-calculator`    | 60.00          | 20.00          | 80.00       | 13.66    |
+| `csv-report-generator` | 60.00          | 20.00          | 80.00       | 5.21     |
+| **Total**              | **120.00**     | **40.00**      | **160.00**  | **18.87**|
+
+The final row should contain the sum of the scores and execution times for all tasks.
+
 ## Scoring
 
 Each task attempt is scored out of 80 points, based on the following objective criteria.
