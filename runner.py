@@ -1,3 +1,4 @@
+# Before running this script, please read the README.md file for instructions and explanations.
 import argparse
 import datetime
 import json
@@ -52,6 +53,7 @@ def display_prompt(task_name):
     print("The agent should now perform the task based on the prompt above.")
     print("The agent's working directory should be the project root.")
     print("All generated files must be placed in the 'solution' directory for this task.")
+    print("For more information on the benchmark, see the README.md file.")
     print("="*80 + "\n")
 
 def run_verifier(task_name):
@@ -214,6 +216,11 @@ def main():
 
     # 'report' command
     subparsers.add_parser("report", help="Report the results of all completed tasks.")
+
+    if len(sys.argv) == 1:
+        print("Before running this script, please read the README.md file for instructions and explanations.\n")
+        parser.print_help()
+        sys.exit(0)
 
     args = parser.parse_args()
 
