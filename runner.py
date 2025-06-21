@@ -8,6 +8,8 @@ import shutil
 import subprocess
 import sys
 
+CONFIRMATION_FILE = ".readme_confirmed"
+
 def get_task_dir(task_name):
     """Get the directory for a given task."""
     task_dir = os.path.join("tasks", task_name)
@@ -215,8 +217,12 @@ def report_results():
 
 def main():
     """Main function to run and score benchmark tasks."""
-    parser = argparse.ArgumentParser(description="Run and score benchmark tasks for a coding agent.")
-    subparsers = parser.add_subparsers(dest="command", required=True)
+    parser = argparse.ArgumentParser(
+        description="Run and score benchmark tasks for a coding agent.",
+        epilog="Please read the README.md for full instructions. You must run this script with '--confirm-readme' once before you can use other commands."
+    )
+    parser.add_argument("--confirm-readme", action="store_true", help="Confirm you have read the README.md.")
+    subparsers = parser.add_subparsers(dest="command", help="Available commands")
 
     # 'list' command
     subparsers.add_parser("list", help="List all available tasks.")
@@ -232,12 +238,33 @@ def main():
     # 'report' command
     subparsers.add_parser("report", help="Report the results of all completed tasks.")
 
-    if len(sys.argv) == 1:
-        print("Before running this script, please read the README.md file for instructions and explanations.\n")
-        parser.print_help()
-        sys.exit(0)
-
     args = parser.parse_args()
+
+    # If --confirm-readme is used, create the file.
+    if args.confirm_readme:
+        with open(CONFIRMATION_FILE, "w") as f:
+            f.write(datetime.datetime.now(datetime.timezone.utc).isoformat())
+        print("README confirmation recorded. You can now use other commands.")
+        # If ONLY --confirm-readme was passed, exit.
+        if not args.command:
+            sys.exit(0)
+
+    # For any command, require confirmation.
+    if args.command and not os.path.exists(CONFIRMATION_FILE):
+        print("Error: You must run --confirm-readme once before using other commands.")
+        print("Example: python runner.py --confirm-readme")
+        sys.exit(1)
+
+    # What if no command is given?
+    if not args.command:
+        if not os.path.exists(CONFIRMATION_FILE):
+            print("Welcome! To get started, please read the README.md file.")
+            print("Then, run this command to confirm you have read it:")
+            print("    python runner.py --confirm-readme")
+        else:
+            # Already confirmed, show help.
+            parser.print_help()
+        sys.exit(0)
 
     if args.command == "list":
         list_tasks()

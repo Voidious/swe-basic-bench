@@ -185,3 +185,4 @@ cython_debug/
 tasks/**/results.json
 tasks/**/solution/
 tasks/**/.start_time
+.readme_confirmed
