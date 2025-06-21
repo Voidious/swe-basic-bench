@@ -11,6 +11,40 @@ Performance can be measured across several axes:
 - **Correctness:** Does the generated code pass all verification checks?
 - **Execution Time:** How long did it take for the agent to complete the task?
 
+## How to Run the Full Benchmark
+
+To run the entire suite of benchmark tasks, the agent should follow this sequence of steps for each task. The agent's goal is to complete all available tasks.
+
+1.  **Confirm README Review**: Before you can run any other command, you must confirm that you have read and understood the instructions in this README. This is a one-time setup step.
+    ```bash
+    python runner.py --confirm-i-have-viewed-entire-readme
+    ```
+
+2.  **List All Tasks**: Get the full list of tasks to be completed.
+    ```bash
+    python runner.py list
+    ```
+
+3.  **Complete Each Task**: For each task identified in the list, the agent must perform the following sub-steps in order:
+    
+    a. **Start the Task**: This prepares the environment and displays the prompt.
+    ```bash
+    python runner.py start <task-name>
+    ```
+    b. **Generate the Solution**: Based on the prompt, the agent must write the code and save it to the `tasks/<task-name>/solution/` directory.
+
+    c. **Evaluate the Solution**: This will run the verifier and record the results.
+    ```bash
+    python runner.py evaluate <task-name>
+    ```
+
+4.  **Generate Final Report**: After attempting all tasks, the agent should generate a consolidated report of all results.
+    ```bash
+    python runner.py report
+    ```
+
+This structured workflow ensures that all tasks are attempted and that the final results are captured in a standardized format.
+
 ## Structure
 
 The benchmark is organized into a series of tasks. Each task is self-contained in its own directory within the `tasks/` directory.
