@@ -217,6 +217,10 @@ def report_results():
     # Print total
     print(f"| **{'Total':<22}** | **{total_correctness:<15.2f}** | **{total_completion:<15.2f}** | **{total_score:<12.2f}** | **{total_time:<10.2f}** |")
 
+    if os.path.exists(CONFIRMATION_FILE):
+        os.remove(CONFIRMATION_FILE)
+        print(f"\nRemoved '{CONFIRMATION_FILE}' to allow for re-running tests from scratch.")
+
 def main():
     """Main function to run and score benchmark tasks."""
     parser = argparse.ArgumentParser(
