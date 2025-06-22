@@ -1,3 +1,9 @@
+## For Human Users
+
+1. Clone this repository.
+2. Open the repository in an AI coding assistant (e.g., Cursor).
+3. Instruct the agent to execute the benchmark.
+
 # SWE-Basic-Bench
 
 A basic benchmark for evaluating the effectiveness of Software Engineering (SWE) coding agents and associated tools (e.g., MCP tools).
@@ -13,39 +19,50 @@ Performance can be measured across several axes:
 
 ## How to Run the Benchmark
 
-To run the suite of benchmark tasks, the agent should use the `runner.py` script. This ensures that the process is standardized and that results are captured in a uniform way.
+**These instructions are for an AI coding agent.**
+
+To run the suite of benchmark tasks, you **must** use the `runner.py` script. This is the only way to ensure that the process is standardized and that results are captured correctly.
+
+**CRITICAL: You must follow these steps in the exact order listed. Do not skip any steps. Failure to follow these instructions will result in a failed task.**
 
 **Important:** Do not modify the `runner.py` script or any of the `verifier/` scripts. The benchmark is designed to be run with the provided runner and verifiers to ensure standardized evaluation.
 
-The intended workflow for an agent is to complete all available tasks by following these steps:
+The required workflow to complete all available tasks is as follows:
 
-1.  **Confirm README Review**: Before you can run any other command, you must confirm that you have read and understood the instructions in this README. This is a one-time setup step.
+1.  **Confirm README Review (MANDATORY)**
+    Before you can run any other command, you **must** confirm that you have read and understood the instructions in this README. This is a mandatory, one-time setup step.
     ```bash
     python runner.py --confirm-i-have-viewed-entire-readme
     ```
+    You will not be able to proceed until this command is run successfully.
 
-2.  **List All Tasks**: Get the full list of tasks to be completed.
+2.  **List All Tasks**
+    Get the full list of tasks to be completed.
     ```bash
     python runner.py list
     ```
 
-3.  **Complete Each Task**: For each task identified in the list, the agent must perform the following sub-steps in order:
-    
-    a. **Start the Task**: This prepares the environment and displays the prompt. After starting, the agent should read the prompt, generate the solution code, and save it to the `tasks/<task-name>/solution/` directory.
+3.  **Complete Each Task**
+    For each task identified in the list, you **must** perform the following sub-steps **in order**.
+
+    a. **Start the Task**: This step is **required** to see the task prompt. It prepares the environment and displays the full requirements. **DO NOT attempt to solve a task without running `start` first.** You will not have the correct information.
     ```bash
     python runner.py start <task-name>
     ```
-    b. **Evaluate the Solution**: This will run the verifier, calculate scores, and record the results in `results.json`.
+    After starting the task, read the prompt that is displayed, generate the solution code, and save it to the `tasks/<task-name>/solution/` directory.
+
+    b. **Evaluate the Solution**: After you have saved your solution, run this command to execute the verifier, calculate scores, and record the results in `results.json`.
     ```bash
     python runner.py evaluate <task-name>
     ```
 
-4.  **Generate Final Report**: After attempting all tasks, the agent should generate a consolidated report of all results.
+4.  **Generate Final Report**
+    After attempting all tasks, generate a consolidated report of all results.
     ```bash
     python runner.py report
     ```
 
-This structured workflow ensures that all tasks are attempted and that the final results are captured in a standardized format.
+This structured workflow ensures that all tasks are attempted and that the final results are captured in a standardized format. Deviating from this workflow will lead to incorrect results.
 
 ## Structure
 
