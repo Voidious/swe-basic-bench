@@ -171,17 +171,32 @@ def report_results():
     tasks_dir = "tasks"
     all_results = []
 
-    for task_name in sorted(os.listdir(tasks_dir)):
+    # Check for missing results.json files
+    missing_results = []
+    task_names = [d for d in sorted(os.listdir(tasks_dir)) if os.path.isdir(os.path.join(tasks_dir, d))]
+    for task_name in task_names:
         task_dir = os.path.join(tasks_dir, task_name)
-        if os.path.isdir(task_dir):
-            results_path = os.path.join(task_dir, "results.json")
-            if os.path.exists(results_path):
-                try:
-                    with open(results_path, 'r') as f:
-                        data = json.load(f)
-                        all_results.append(data)
-                except (json.JSONDecodeError, KeyError):
-                    print(f"Warning: Could not parse results.json for '{task_name}'")
+        results_path = os.path.join(task_dir, "results.json")
+        if not os.path.exists(results_path):
+            missing_results.append(task_name)
+    if missing_results:
+        print("Error: You must attempt all tasks before running the report.")
+        print("The following tasks have not been evaluated:")
+        for t in missing_results:
+            print(f"- {t}")
+        print("\nPlease run 'python runner.py evaluate <task-name>' for each missing task before generating the report.")
+        return
+
+    for task_name in task_names:
+        task_dir = os.path.join(tasks_dir, task_name)
+        results_path = os.path.join(task_dir, "results.json")
+        if os.path.exists(results_path):
+            try:
+                with open(results_path, 'r') as f:
+                    data = json.load(f)
+                    all_results.append(data)
+            except (json.JSONDecodeError, KeyError):
+                print(f"Warning: Could not parse results.json for '{task_name}'")
 
     if not all_results:
         print("No results found. Run a task with 'evaluate' to generate results.")
