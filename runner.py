@@ -90,8 +90,8 @@ def record_start_time(task_name):
 
 def get_execution_time(task_name):
     """
-    Calculates the execution time for a task by reading the start time 
-    and deleting the start time file.
+    Calculates the execution time for a task by reading the start time
+    (does NOT delete the start time file).
     """
     task_dir = get_task_dir(task_name)
     start_time_path = os.path.join(task_dir, ".start_time")
@@ -102,7 +102,6 @@ def get_execution_time(task_name):
             start_time = datetime.datetime.fromisoformat(start_time_str)
             end_time = datetime.datetime.now(datetime.timezone.utc)
             execution_time = (end_time - start_time).total_seconds()
-        os.remove(start_time_path)
     else:
         print("Warning: Start time not found. Could not calculate execution time.")
     return execution_time
@@ -291,6 +290,25 @@ def main():
         execution_time = get_execution_time(args.task)
         pytest_output = run_verifier(args.task)
         calculate_and_save_results(args.task, pytest_output, execution_time)
+        # Only delete .start_time if all tests passed
+        passed_tests = 0
+        total_tests = 0
+        summary_match = re.search(r"(\d+)\s+passed", pytest_output)
+        if summary_match:
+            passed_tests = int(summary_match.group(1))
+        failed_match = re.search(r"(\d+)\s+failed", pytest_output)
+        errored_match = re.search(r"(\d+)\s+error", pytest_output)
+        total_tests = passed_tests
+        if failed_match:
+            total_tests += int(failed_match.group(1))
+        if errored_match:
+            total_tests += int(errored_match.group(1))
+        if total_tests > 0 and passed_tests == total_tests:
+            # All tests passed, delete .start_time
+            task_dir = get_task_dir(args.task)
+            start_time_path = os.path.join(task_dir, ".start_time")
+            if os.path.exists(start_time_path):
+                os.remove(start_time_path)
     elif args.command == "report":
         report_results()
 
