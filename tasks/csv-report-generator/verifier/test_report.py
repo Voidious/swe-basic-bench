@@ -1,6 +1,30 @@
 import pytest
 import re
 import os
+import subprocess
+import sys
+
+def setup_module(module):
+    """Runs the report generator script before tests."""
+    script_path = os.path.abspath(os.path.join(os.path.dirname(__file__), '../solution/report_generator.py'))
+    
+    if not os.path.exists(script_path):
+        pytest.fail(f"Report generator script not found at: {script_path}")
+
+    # The prompt says to run from the root of swe-basic-bench
+    workspace_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../..'))
+    
+    # We need to make sure we run the user's script
+    process = subprocess.run(
+        [sys.executable, script_path],
+        cwd=workspace_root,
+        capture_output=True,
+        text=True
+    )
+
+    if process.returncode != 0:
+        pytest.fail(f"The report generator script failed with the following error:\n{process.stderr}")
+
 
 def get_report_values():
     """Reads the generated report and extracts the values."""
@@ -24,11 +48,6 @@ def get_report_values():
         "avg_price": float(avg_price_match.group(1)),
         "total_revenue": float(total_revenue_match.group(1))
     }
-
-def test_report_exists():
-    """Tests if the report file was created."""
-    report_path = os.path.join(os.path.dirname(__file__), '../solution/report.txt')
-    assert os.path.exists(report_path), "The report file 'report.txt' was not found in the solution directory."
 
 def test_average_price():
     """Tests if the average price in the report is correct."""
