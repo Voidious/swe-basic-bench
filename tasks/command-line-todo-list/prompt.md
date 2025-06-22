@@ -71,4 +71,14 @@ python solution/todo.py delete 1
 python solution/todo.py list
 # Expected output:
 # No tasks yet.
-``` 
+```
+
+## Verification
+
+To verify your solution, run the tests located in the `verifier/` directory. First you will need to install pytest:
+`pip install pytest`
+
+Then, to run the verifier, execute the following command from the root of the `swe-basic-bench` directory:
+`pytest tasks/command-line-todo-list/verifier/test_todo.py`
+
+Your goal is to make all the tests pass. 
