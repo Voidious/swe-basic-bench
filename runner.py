@@ -212,8 +212,8 @@ def report_results():
     ]
 
     # Table header
-    output_lines.append(f"| {'Task':<24} | {'Correct. (/60)':<15} | {'Complete (/20)':<15} | {'Score (/80)':<12} | {'Time (s)':<10} |")
-    output_lines.append(f"| {'-'*24} | {'-'*15} | {'-'*15} | {'-'*12} | {'-'*10} |")
+    output_lines.append(f"| {'Task':<30} | {'Correct. (/60)':<15} | {'Complete (/20)':<15} | {'Score (/80)':<12} | {'Time (s)':<10} |")
+    output_lines.append(f"| {'-'*30} | {'-'*15} | {'-'*15} | {'-'*12} | {'-'*10} |")
 
     total_correctness = 0
     total_completion = 0
@@ -232,11 +232,11 @@ def report_results():
         total_score += score
         total_time += time
 
-        output_lines.append(f"| {task_name:<24} | {correctness:<15.2f} | {completion:<15.2f} | {score:<12.2f} | {time:<10.2f} |")
+        output_lines.append(f"| {task_name:<30} | {correctness:<15.2f} | {completion:<15.2f} | {score:<12.2f} | {time:<10.2f} |")
 
     # Total row
     total_label = f"Total"
-    output_lines.append(f"| {total_label:<24} | {total_correctness:<15.2f} | {total_completion:<15.2f} | {total_score:<12.2f} | {total_time:<10.2f} |")
+    output_lines.append(f"| {total_label:<30} | {total_correctness:<15.2f} | {total_completion:<15.2f} | {total_score:<12.2f} | {total_time:<10.2f} |")
     
     print('\n'.join(output_lines))
 

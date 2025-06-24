@@ -104,11 +104,12 @@ The agent can gather this information from the `results.json` file generated for
 
 Here is an example of the expected output format:
 
-| Task                   | Correct. (/60) | Complete (/20) | Score (/80) | Time (s) |
-| ---------------------- | -------------- | -------------- | ----------- | -------- |
-| `simple-calculator`    | 60.00          | 20.00          | 80.00       | 13.66    |
-| `csv-report-generator` | 60.00          | 20.00          | 80.00       | 5.21     |
-| **Total**              | **120.00**     | **40.00**      | **160.00**  | **18.87**|
+| Task                           | Correct. (/60) | Complete (/20) | Score (/80) | Time (s) |
+| ------------------------------ | -------------- | -------------- | ----------- | -------- |
+| `simple-calculator`            | 60.00          | 20.00          | 80.00       | 13.66    |
+| `csv-report-generator`         | 60.00          | 20.00          | 80.00       | 5.21     |
+| `data-pipeline-with-branching` | 60.00          | 20.00          | 80.00       | 8.42     |
+| **Total**                      | **180.00**     | **60.00**      | **240.00**  | **27.29**|
 
 The final row should contain the sum of the scores and execution times for all tasks.
 
@@ -150,3 +151,12 @@ The `runner.py` script generates a `results.json` file with the following struct
     -   A `verifier/` directory with one or more verification scripts.
     -   (Optional) An `initial_code/` directory if the task builds on existing code.
 3.  Ensure the `prompt.md` includes instructions on how to run the verifier.
+
+## Benchmark Tasks
+
+This benchmark currently includes the following tasks:
+
+- **simple-calculator**: Implement a basic calculator that can perform addition, subtraction, multiplication, and division based on user input from the command line.
+- **command-line-todo-list**: Build a command-line to-do list application that supports adding, listing, and removing tasks, with persistent storage.
+- **csv-report-generator**: Generate summary and detailed reports from a CSV file, including calculations and formatted output.
+- **data-pipeline-with-branching**: Build an automated data pipeline that downloads, validates, processes, and reports on CSV data. The pipeline must handle conditional branching (e.g., process only 'active' rows if a 'status' column exists), error recovery (e.g., retry downloads, halt on validation errors), and be able to report its current state and progress. This task is designed to test multi-step reasoning, dependency tracking, error recovery, and reflection capabilities, making it especially suitable for agents with advanced planning or sequential-thinking tools.
