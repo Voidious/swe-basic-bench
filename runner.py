@@ -244,6 +244,48 @@ def report_results():
         os.remove(CONFIRMATION_FILE)
         print(f"\nRemoved '{CONFIRMATION_FILE}' to allow for re-running tests from scratch.")
 
+def reset_benchmark():
+    """Removes all temporary files and directories for a clean benchmark state."""
+    import glob
+    # Remove .readme_confirmed
+    if os.path.exists(CONFIRMATION_FILE):
+        os.remove(CONFIRMATION_FILE)
+        print("Removed .readme_confirmed")
+    # Clean up each task
+    tasks_dir = "tasks"
+    if os.path.isdir(tasks_dir):
+        for task_name in os.listdir(tasks_dir):
+            task_dir = os.path.join(tasks_dir, task_name)
+            if not os.path.isdir(task_dir):
+                continue
+            # Remove .start_time
+            start_time_path = os.path.join(task_dir, ".start_time")
+            if os.path.exists(start_time_path):
+                os.remove(start_time_path)
+                print(f"Removed {start_time_path}")
+            # Remove solution directory
+            solution_dir = os.path.join(task_dir, "solution")
+            if os.path.exists(solution_dir):
+                shutil.rmtree(solution_dir)
+                print(f"Removed {solution_dir}")
+            # Remove results.json
+            results_path = os.path.join(task_dir, "results.json")
+            if os.path.exists(results_path):
+                os.remove(results_path)
+                print(f"Removed {results_path}")
+            # Remove generated report in csv-report-generator (if exists)
+            if task_name == "csv-report-generator":
+                # Remove any .csv or .txt files in solution if present
+                solution_dir = os.path.join(task_dir, "solution")
+                if os.path.exists(solution_dir):
+                    for f in os.listdir(solution_dir):
+                        if f.endswith(".csv") or f.endswith(".txt") or f.lower().startswith("report"):
+                            try:
+                                os.remove(os.path.join(solution_dir, f))
+                                print(f"Removed {os.path.join(solution_dir, f)}")
+                            except Exception:
+                                pass
+
 def main():
     """Main function to run and score benchmark tasks."""
     parser = argparse.ArgumentParser(
@@ -266,6 +308,9 @@ def main():
 
     # 'report' command
     subparsers.add_parser("report", help="Report the results of all completed tasks.")
+
+    # 'reset' command (not documented)
+    subparsers.add_parser("reset", help=argparse.SUPPRESS)
 
     args = parser.parse_args()
 
@@ -326,6 +371,9 @@ def main():
                 os.remove(start_time_path)
     elif args.command == "report":
         report_results()
+    elif args.command == "reset":
+        reset_benchmark()
+        print("Benchmark state has been reset.")
 
 if __name__ == "__main__":
     main() 
